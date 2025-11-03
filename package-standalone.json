@@ -1,0 +1,21 @@
+{
+  "name": "guardia-pdf-standalone",
+  "version": "1.0.0",
+  "description": "Generador de PDFs standalone con Puppeteer + Handlebars para Cruz Roja",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "handlebars": "^4.7.8",
+    "puppeteer": "^21.5.0",
+    "open": "^9.1.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
