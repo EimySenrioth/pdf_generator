@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist de Ambulancia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @page {
+            size: A4;
+            margin: 15mm;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: white;
+            color: #333;
+            line-height: 1.3;
+            font-size: 12px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: none;
+            background: white;
+            margin: 0;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #c41e3a;
+            padding-bottom: 12px;
+        }
+        
+        .header h1 {
+            color: #c41e3a;
+            font-size: 22px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .header h2 {
+            color: #333;
+            font-size: 16px;
+            font-weight: normal;
+        }
+        
+        .info-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            page-break-inside: avoid;
+        }
+        
+        .info-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .info-item label {
+            font-weight: bold;
+            color: #555;
+            min-width: 80px;
+            font-size: 11px;
+        }
+        
+        .info-item span {
+            color: #333;
+            border-bottom: 1px solid #999;
+            flex: 1;
+            padding: 2px 6px;
+            font-size: 11px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+            page-break-inside: auto;
+        }
+        
+        th {
+            background: #c41e3a;
+            color: white;
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 11px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        td {
+            padding: 7px 6px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+            font-size: 10px;
+            page-break-inside: avoid;
+        }
+        
+        tr {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        /* Estilo para celdas con rowspan */
+        td[rowspan] {
+            vertical-align: middle;
+            border-right: 2px solid #c41e3a;
+            font-weight: 600;
+            background: #f8f9fa;
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: bold;
+            margin: 1px 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        .status.satisfactorio {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .status.regular {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .status.malo {
+            background: #f44336;
+            color: white;
+        }
+        
+        .notes-section {
+            margin-bottom: 15px;
+            page-break-inside: avoid;
+        }
+        
+        .notes-section h3 {
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .notes-content {
+            background: #f9f9f9;
+            padding: 12px;
+            border-left: 4px solid #c41e3a;
+            line-height: 1.4;
+            color: #555;
+            font-size: 11px;
+            min-height: 50px;
+        }
+        
+        .signatures {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+            page-break-inside: avoid;
+        }
+        
+        .signature-box {
+            text-align: center;
+        }
+        
+        .signature-line {
+            border-top: 2px solid #333;
+            margin-bottom: 8px;
+            padding-top: 8px;
+            height: 35px;
+        }
+        
+        .signature-box p {
+            margin: 3px 0;
+            color: #555;
+            font-size: 11px;
+        }
+        
+        .signature-box .name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .col-checklist { width: 35%; }
+        .col-incidencias { width: 40%; }
+        .col-estado { width: 25%; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Coordinación Local de Socorros</h1>
+            <h2>Checklist de Ambulancia</h2>
+        </div>
+        
+        <div class="info-section">
+            <div class="info-item">
+                <label>Ambulancia:</label>
+                <span>{{ambulancia}}</span>
+            </div>
+            <div class="info-item">
+                <label>Fecha:</label>
+                <span>{{fecha}}</span>
+            </div>
+            <div class="info-item">
+                <label>Hora:</label>
+                <span>{{hora}}</span>
+            </div>
+            <div class="info-item">
+                <label>Km:</label>
+                <span>{{kilometraje}}</span>
+            </div>
+            <div class="info-item">
+                <label>Vale de Gas:</label>
+                <span>{{valeGas}}</span>
+            </div>
+            <div class="info-item">
+                <label>Jefe de Guardia:</label>
+                <span>{{jefeGuardia}}</span>
+            </div>
+            <div class="info-item">
+                <label>Operador:</label>
+                <span>{{operador}}</span>
+            </div>
+            <div class="info-item">
+                <label>TUM:</label>
+                <span>{{tum}}</span>
+            </div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-checklist">Checklist</th>
+                    <th class="col-incidencias">Reporte de Incidencias</th>
+                    <th class="col-estado">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each items}}
+                <tr>
+                    <td rowspan="{{this.incidencias.length}}">{{this.numero}}. {{this.nombre}}</td>
+                    <td>{{this.incidencias.[0].descripcion}}</td>
+                    <td><span class="status {{this.incidencias.[0].estado}}">{{this.incidencias.[0].estadoTexto}}</span></td>
+                </tr>
+                {{#each this.incidencias}}
+                {{#unless @first}}
+                <tr>
+                    <td>{{this.descripcion}}</td>
+                    <td><span class="status {{this.estado}}">{{this.estadoTexto}}</span></td>
+                </tr>
+                {{/unless}}
+                {{/each}}
+                {{/each}}
+            </tbody>
+        </table>
+        
+        <div class="notes-section">
+            <h3>Notas:</h3>
+            <div class="notes-content">
+                {{notas}}
+            </div>
+        </div>
+        
+        <div class="signatures">
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="name">Entrega: <span style="font-weight:normal">{{entrega.nombre}}</span></p>
+                <p>Cargo: {{entrega.cargo}}</p>
+            </div>
+            <div class="signature-box">
+                <div class="signature-line"></div>
+                <p class="name">Recibe: <span style="font-weight:normal">{{recibe.nombre}}</span></p>
+                <p>Cargo: {{recibe.cargo}}</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

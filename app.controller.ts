@@ -110,17 +110,25 @@ export class AppController {
           </div>
           
           <div class="buttons">
-              <a href="/guardias/pdf/preview?mock=true" class="btn">👁️ Vista Previa HTML</a>
-              <a href="/guardias/pdf" class="btn danger">📄 Descargar PDF</a>
-              <a href="/guardias/test" class="btn">📊 Ver Datos JSON</a>
+              <a href="/guardias/pdf/preview?mock=true" class="btn">👁️ Vista Previa Guardias</a>
+              <a href="/guardias/pdf" class="btn danger">📄 PDF Guardias</a>
+              <a href="/guardias/test" class="btn">📊 Datos Guardias</a>
+          </div>
+
+          <div class="buttons">
+              <a href="/guardias/checklist/preview" class="btn">🚑 Vista Previa Checklist</a>
+              <a href="/guardias/checklist/pdf" class="btn danger">📋 PDF Checklist</a>
+              <a href="/guardias/checklist/test" class="btn">� Datos Checklist</a>
           </div>
           
           <div class="info">
               <h3>🚀 Funcionalidades Disponibles:</h3>
               <ul>
-                  <li><strong>Vista Previa HTML:</strong> Visualiza el diseño del reporte antes de generar el PDF</li>
+                  <li><strong>Reportes de Guardias:</strong> Sistema completo de reportes médicos</li>
+                  <li><strong>Checklist de Ambulancia:</strong> Inspección vehicular profesional</li>
+                  <li><strong>Vista Previa HTML:</strong> Visualiza el diseño antes de generar el PDF</li>
                   <li><strong>Generación de PDF:</strong> Descarga reportes profesionales con Puppeteer</li>
-                  <li><strong>Datos de Prueba:</strong> Sistema con datos realistas de guardias médicas</li>
+                  <li><strong>Datos de Prueba:</strong> Sistema con datos realistas</li>
                   <li><strong>Diseño Cruz Roja:</strong> Colores oficiales y diseño profesional</li>
                   <li><strong>NestJS + TypeScript:</strong> Arquitectura moderna y escalable</li>
               </ul>
@@ -128,9 +136,12 @@ export class AppController {
               <h3 style="margin-top: 20px;">🔗 Endpoints disponibles:</h3>
               <ul>
                   <li><code>GET /</code> - Esta página de inicio</li>
-                  <li><code>GET /guardias/pdf</code> - Descargar PDF directamente</li>
-                  <li><code>GET /guardias/pdf/preview</code> - Vista previa en HTML</li>
-                  <li><code>GET /guardias/test</code> - Datos JSON de prueba</li>
+                  <li><code>GET /guardias/pdf</code> - Descargar PDF de guardias</li>
+                  <li><code>GET /guardias/pdf/preview</code> - Vista previa guardias</li>
+                  <li><code>GET /guardias/test</code> - Datos JSON de guardias</li>
+                  <li><code>GET /guardias/checklist/pdf</code> - Descargar PDF checklist</li>
+                  <li><code>GET /guardias/checklist/preview</code> - Vista previa checklist</li>
+                  <li><code>GET /guardias/checklist/test</code> - Datos JSON checklist</li>
               </ul>
           </div>
       </body>
