@@ -8,6 +8,7 @@ import { readFile } from 'fs/promises';
 import { join } from 'path';
 import { Guardia } from './interfaces/guardia.interface';
 import { ChecklistAmbulancia } from './interfaces/checklist-ambulancia.interface';
+import { InformeChecklistInsumos } from './interfaces/informe-checklist-insumos.interface';
 
 @Injectable()
 export class GuardiaReportService {
@@ -298,6 +299,191 @@ export class GuardiaReportService {
 
   async generarChecklistPDF(data?: ChecklistAmbulancia): Promise<Buffer> {
     const html = await this.generarChecklistHTML(data);
+
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+
+    const page = await browser.newPage();
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+
+    const pdf = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: '15mm',
+        right: '15mm',
+        bottom: '15mm',
+        left: '15mm',
+      },
+      displayHeaderFooter: false,
+      scale: 1.0,
+    });
+
+    await browser.close();
+    return pdf;
+  }
+
+  // ==================== MÉTODOS PARA INFORME CHECKLIST DE INSUMOS ====================
+
+  getMockInsumosData(): InformeChecklistInsumos {
+    return {
+      division: "División Metropolitana Norte",
+      ambulancia: "AMB-002",
+      fecha: new Date().toLocaleDateString('es-MX'),
+      hora: new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' }),
+      jefeGuardia: "Dr. María González",
+      tum: "Carlos López",
+      gabinetes: [
+        {
+          titulo: "Gabinete 1. Equipo de vías aéreas",
+          items: [
+            {
+              categoria: "Bolsa de válvula-mascarilla (BVM)",
+              especificacion: "Adulto",
+              cantidad: 0,
+              observacion: "Existe un déficit de 1 insumo(s) de este tipo",
+              deficit: true,
+              esPrimera: true,
+              rowspan: 3
+            },
+            {
+              categoria: "Bolsa de válvula-mascarilla (BVM)",
+              especificacion: "Pediátrico",
+              cantidad: 0,
+              observacion: "Existe un déficit de 1 insumo(s) de este tipo",
+              deficit: true
+            },
+            {
+              categoria: "Bolsa de válvula-mascarilla (BVM)",
+              especificacion: "Neonato",
+              cantidad: 0,
+              observacion: "Existe un déficit de 1 insumo(s) de este tipo",
+              deficit: true
+            },
+            {
+              categoria: "Mascarilla sin reservorio",
+              especificacion: "Adulto",
+              cantidad: 2,
+              observacion: "Existe un déficit de 2 insumo(s) de este tipo",
+              deficit: true,
+              esPrimera: true,
+              rowspan: 2
+            },
+            {
+              categoria: "Mascarilla sin reservorio",
+              especificacion: "Pediátrico",
+              cantidad: 2,
+              observacion: "Existe un déficit de 2 insumo(s) de este tipo",
+              deficit: true
+            },
+            {
+              categoria: "Mascarilla con reservorio",
+              especificacion: "Adulto",
+              cantidad: 1,
+              observacion: "Existe un déficit de 3 insumo(s) de este tipo",
+              deficit: true
+            }
+          ]
+        },
+        {
+          titulo: "Gabinete 2. Equipo de circulación y control de hemorragias",
+          items: [
+            {
+              categoria: "Esfigmomanómetro",
+              especificacion: "Adulto",
+              cantidad: 1,
+              observacion: "Stock completo",
+              deficit: false,
+              esPrimera: true,
+              rowspan: 2
+            },
+            {
+              categoria: "Esfigmomanómetro",
+              especificacion: "Pediátrico",
+              cantidad: 1,
+              observacion: "Stock completo",
+              deficit: false
+            },
+            {
+              categoria: "Torniquete",
+              especificacion: "Estándar",
+              cantidad: 3,
+              observacion: "Stock completo",
+              deficit: false
+            },
+            {
+              categoria: "Vendajes hemostáticos",
+              especificacion: "Quick Clot",
+              cantidad: 2,
+              observacion: "Existe un déficit de 1 insumo(s) de este tipo",
+              deficit: true
+            }
+          ]
+        },
+        {
+          titulo: "Gabinete 3. Material de curación y vendajes",
+          items: [
+            {
+              categoria: "Gasas estériles",
+              especificacion: "5x5 cm",
+              cantidad: 10,
+              observacion: "Stock completo",
+              deficit: false,
+              esPrimera: true,
+              rowspan: 2
+            },
+            {
+              categoria: "Gasas estériles",
+              especificacion: "10x10 cm",
+              cantidad: 5,
+              observacion: "Existe un déficit de 5 insumo(s) de este tipo",
+              deficit: true
+            },
+            {
+              categoria: "Vendas elásticas",
+              especificacion: "5 cm",
+              cantidad: 8,
+              observacion: "Stock completo",
+              deficit: false,
+              esPrimera: true,
+              rowspan: 2
+            },
+            {
+              categoria: "Vendas elásticas",
+              especificacion: "10 cm",
+              cantidad: 4,
+              observacion: "Existe un déficit de 2 insumo(s) de este tipo",
+              deficit: true
+            }
+          ]
+        }
+      ],
+      notas: "Se requiere reposición urgente de BVM adulto y pediátrico. Las mascarillas con reservorio necesitan revisión de fecha de vencimiento. El stock de vendajes hemostáticos está por debajo del mínimo requerido para servicios de emergencia.",
+      entrega: {
+        nombre: "Ana Martínez",
+        cargo: "Supervisora de Insumos"
+      },
+      recibe: {
+        nombre: "Roberto Silva",
+        cargo: "Jefe de Guardia Entrante"
+      }
+    };
+  }
+
+  async generarInsumosHTML(data?: InformeChecklistInsumos): Promise<string> {
+    const insumosData = data || this.getMockInsumosData();
+
+    const templatePath = join(__dirname, 'templates', 'informe-checklist-insumos.html');
+    const templateHtml = await readFile(templatePath, 'utf-8');
+    const template = Handlebars.compile(templateHtml);
+
+    return template(insumosData);
+  }
+
+  async generarInsumosPDF(data?: InformeChecklistInsumos): Promise<Buffer> {
+    const html = await this.generarInsumosHTML(data);
 
     const browser = await puppeteer.launch({
       headless: true,

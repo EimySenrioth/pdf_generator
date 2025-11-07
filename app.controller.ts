@@ -118,7 +118,13 @@ export class AppController {
           <div class="buttons">
               <a href="/guardias/checklist/preview" class="btn">🚑 Vista Previa Checklist</a>
               <a href="/guardias/checklist/pdf" class="btn danger">📋 PDF Checklist</a>
-              <a href="/guardias/checklist/test" class="btn">� Datos Checklist</a>
+              <a href="/guardias/checklist/test" class="btn">🔧 Datos Checklist</a>
+          </div>
+
+          <div class="buttons">
+              <a href="/guardias/insumos/preview" class="btn">📦 Vista Previa Insumos</a>
+              <a href="/guardias/insumos/pdf" class="btn danger">📊 PDF Insumos</a>
+              <a href="/guardias/insumos/test" class="btn">🏥 Datos Insumos</a>
           </div>
           
           <div class="info">

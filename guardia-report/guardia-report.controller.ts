@@ -3,6 +3,7 @@ import { Controller, Get, Res, Header, Query, Post, Body } from '@nestjs/common'
 import { GuardiaReportService } from './guardia-report.service';
 import { Response } from 'express';
 import { ChecklistAmbulanciaDto } from './dto/checklist-ambulancia.dto';
+import { InformeChecklistInsumosDto } from './dto/informe-checklist-insumos.dto';
 
 @Controller('guardias')
 export class GuardiaReportController {
@@ -63,5 +64,42 @@ export class GuardiaReportController {
   @Get('checklist/test')
   async testChecklistData() {
     return this.reportService.getMockChecklistData();
+  }
+
+  // ==================== RUTAS PARA INFORME CHECKLIST DE INSUMOS ====================
+
+  @Get('insumos/pdf')
+  @Header('Content-Type', 'application/pdf')
+  @Header('Content-Disposition', 'attachment; filename=informe-checklist-insumos.pdf')
+  async generarInsumosPDF(@Res() res: Response) {
+    const pdf = await this.reportService.generarInsumosPDF();
+    res.send(pdf);
+  }
+
+  @Post('insumos/pdf')
+  @Header('Content-Type', 'application/pdf')
+  @Header('Content-Disposition', 'attachment; filename=informe-checklist-insumos.pdf')
+  async generarInsumosPDFConDatos(@Body() insumosData: InformeChecklistInsumosDto, @Res() res: Response) {
+    const pdf = await this.reportService.generarInsumosPDF(insumosData);
+    res.send(pdf);
+  }
+
+  @Get('insumos/preview')
+  @Header('Content-Type', 'text/html')
+  async previewInsumosHTML(@Res() res: Response) {
+    const html = await this.reportService.generarInsumosHTML();
+    res.send(html);
+  }
+
+  @Post('insumos/preview')
+  @Header('Content-Type', 'text/html')
+  async previewInsumosHTMLConDatos(@Body() insumosData: InformeChecklistInsumosDto, @Res() res: Response) {
+    const html = await this.reportService.generarInsumosHTML(insumosData);
+    res.send(html);
+  }
+
+  @Get('insumos/test')
+  async testInsumosData() {
+    return this.reportService.getMockInsumosData();
   }
 }
